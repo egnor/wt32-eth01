@@ -1,6 +1,6 @@
 # Unofficial guide to the [WT32-ETH01](http://www.wireless-tag.com/portfolio/wt32-eth01/)
 
-<img alt="WT32-ETH01 circuit board" src="http://www.wireless-tag.cn/wp-content/uploads/2020/08/12-300x263-1.jpg" width=200>
+<img alt="WT32-ETH01 circuit board" src="wt32-eth01.png" width=200>
 
 ## What is this thing and why would I use it?
 
