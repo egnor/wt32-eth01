@@ -12,27 +12,47 @@ It's marketed as a "serial port to Ethernet module" and comes loaded with firmwa
 
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much.
 
-## Device details
-
-[The data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) gives a pretty good overview of the product, including a system block diagram:
-
-<img alt="WT32-ESP01 system block diagram" src="https://user-images.githubusercontent.com/279819/211134688-df67c565-bd14-44cd-bdfb-e28279180e42.png" width=600>
-
-- [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) is the Ethernet physical layer controller (PHY)
-- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip
-- "Left Interface" and "Right Interface" are just the two pin headers
-
-There are multiple revisions of the device -- I've seen "V1.2" and "V1.4" on the silkscreen, and the trace routing does differ -- but the differences are unknown. You can get it with or without pin headers pre-soldered on.
-
-Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its provenance and accuracy are unknown, but it's been helpful to me.
-
 ## Pins (and gotchas!)
 
-The data sheet also has a pin diagram, but [an older version](WT32-ETH01_manual.pdf) actually has better English labels:
+[The data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) has a pin diagram, though
+[an older version](WT32-ETH01_manual.pdf) actually has better English labels:
 
 <img alt="WT32-ESP01 pins" src="https://user-images.githubusercontent.com/279819/211134805-77965a29-976c-4b20-ae87-8b64f8f9d04e.png" width=600>
 
 Note that `CFG`, `485_EN`, `RXD` and `TXD` describe functions specific to their "serial gateway" firmware-- if you run your own firmware, these are just GPIOs (`IO32`, `IO33`, `IO5` and `IO17` respectively).
+
+### Beware!
+
+There are limitations on several of the pins; see "Strapping Pins"
+(section 3.3) in the
+[processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf.
+
+**IO0:** At boot, must be pulled low to program, must float to boot normally.
+After booting, may be used as a normal I/O pin, but watch out because a lot
+of programmers will drive it. Best to avoid using it for anything else.
+
+**IO1:** Set up as ESP32 serial output on boot. Used when programming
+and active by default when running. Best to avoid using it for anything else.
+
+**IO2:** At boot, must float when programming. May be used normally after
+booting or if not programming. You can use this pin but make sure to
+disconnect it when programming.
+
+**IO3:** Set up as ESP32 serial input on boot. Used when programming
+and active by default when running. Best to avoid using it for anything else.
+
+**IO5, IO15:** At boot, IO5 controls whether ESP32 libraries will print debug
+messages to the serial port (IO1). Also at boot, IO5 and IO15 together
+control timings of the module that lets the ESP32 act as an SD card.
+You are probably not using that module. So feel free to use these pins as
+usual but be aware of the possible effect on serial debug chatter
+(if you care).
+
+**IO12:** Must float low at boot (there's an internal pull-down), otherwise
+the chip won't work. After booting, may be used as a normal I/O pin.
+Best to use only as an output (if at all) to avoid booting issues.
+
+**IO35, IO36, IO39:** These pins are input only, but are otherwise free to use.
 
 ## Power
 
@@ -106,6 +126,20 @@ auto const eth_netif_glue = esp_eth_new_netif_glue(eth_handle);
 ESP_ERROR_CHECK(esp_netif_attach(global_netif, eth_netif_glue));
 ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 ```
+
+## Internal details
+
+[The data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) gives a pretty good overview of the product, including a system block diagram:
+
+<img alt="WT32-ESP01 system block diagram" src="https://user-images.githubusercontent.com/279819/211134688-df67c565-bd14-44cd-bdfb-e28279180e42.png" width=600>
+
+- [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) is the Ethernet physical layer controller (PHY)
+- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip
+- "Left Interface" and "Right Interface" are just the two pin headers
+
+There are multiple revisions of the device -- I've seen "V1.2" and "V1.4" on the silkscreen, and the trace routing does differ -- but the differences are unknown. You can get it with or without pin headers pre-soldered on.
+
+Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its provenance and accuracy are unknown, but it's been helpful to me.
 
 ## TODO
 
