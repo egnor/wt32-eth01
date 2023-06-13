@@ -25,7 +25,7 @@ Note that `CFG`, `485_EN`, `RXD` and `TXD` describe functions specific to their 
 
 There are limitations on several of the pins; see "Strapping Pins"
 (section 3.3) in the
-[processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf.
+[processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf).
 
 **IO0:** At boot, must be pulled low to program, must float to boot normally.
 After booting, may be used as a normal I/O pin, but watch out because a lot
