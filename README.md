@@ -18,23 +18,21 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 
 <img alt="WT32-ESP01 system block diagram" src="https://user-images.githubusercontent.com/279819/211134688-df67c565-bd14-44cd-bdfb-e28279180e42.png" width=600>
 
-- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip
 - [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) is the Ethernet physical layer controller (PHY)
+- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip
 - "Left Interface" and "Right Interface" are just the two pin headers
 
 There are multiple revisions of the device -- I've seen "V1.2" and "V1.4" on the silkscreen, and the trace routing does differ -- but the differences are unknown. You can get it with or without pin headers pre-soldered on.
 
-## Pins
+Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its provenance and accuracy are unknown, but it's been helpful to me.
 
-The data sheet also has a pin diagram, but [an older version](https://files.seeedstudio.com/products/102991455/WT32-ETH01_datasheet_V1.1-%20en.pdf) actually has better English labels:
+## Pins (and gotchas!)
+
+The data sheet also has a pin diagram, but [an older version](WT32-ETH01_manual.pdf) actually has better English labels:
 
 <img alt="WT32-ESP01 pins" src="https://user-images.githubusercontent.com/279819/211134805-77965a29-976c-4b20-ae87-8b64f8f9d04e.png" width=600>
 
 Note that `CFG`, `485_EN`, `RXD` and `TXD` describe functions specific to their "serial gateway" firmware-- if you run your own firmware, these are just GPIOs (`IO32`, `IO33`, `IO5` and `IO17` respectively).
-
-Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its provenance and accuracy are unknown, but it's been helpful to me.
-
-## Pin gotchas!
 
 ## Power
 
