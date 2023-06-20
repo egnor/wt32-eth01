@@ -12,6 +12,8 @@ It's marketed as a "serial port to Ethernet module" and comes loaded with firmwa
 
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much.
 
+See also [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
+
 ## Pins (and gotchas!)
 
 [The data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) has a pin diagram, though
