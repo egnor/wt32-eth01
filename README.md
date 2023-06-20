@@ -28,17 +28,17 @@ There are limitations on several of the pins; see "Strapping Pins"
 [processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf).
 
 **IO0:** At boot, must be pulled low to program, must float or be pulled high
-to boot normally. You could theoretically use this pin after booting, but
-programmers will drive it. Best to avoid using it.
+to boot normally. After booting, used to receive the Ethernet 50Mhz clock
+(enabled by IO16). Best to avoid any other use.
 
-**IO1:** Set up as ESP32 serial output on boot. Used when programming
-and active by default when running. Best to avoid using it for anything else.
+**IO1:** ESP32 serial output. Used when programming and active by default
+when running. Best to avoid any other use.
 
 **IO2:** At boot, must float or be pulled low to program. You can use this pin
 (especially for output) but make sure nothing pulls it high while booting.
 
-**IO3:** Set up as ESP32 serial input on boot. Used when programming
-and active by default when running. Best to avoid using it for anything else.
+**IO3:** ESP32 serial input. Used when programming and active by default
+when running. Best to avoid any other use.
 
 **IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries will print
 debug messages to the serial port (IO1). Also at boot, IO5 and IO15 together
@@ -46,7 +46,7 @@ control timings of the module that lets the ESP32 act as an SD card.
 You are probably not using that module, so you can use these pins (especially
 for output) but note the effect on debug chatter if pulled while booting.
 
-**IO12 (MTDI):** Must float or be pulled low at boot, or the chip won't work
+**IO12 (MTDI):** At boot, must float or be pulled low or the chip won't work
 (wrong voltage). You can use this pin after booting, but make sure nothing
 pulls it high while booting.
 
@@ -59,6 +59,10 @@ You may supply 3.3V power on the `3V3` pins, or 5V power on the `5V` pins, but n
 The schematic lists an "LM1117F-1.8V" voltage regulator, which is clearly wrong-- the output is 3.3V, not 1.8V, and also the actual part on the board appears to be an [AMS1117-3.3](http://www.advanced-monolithic.com/pdf/ds1117.pdf). This LDO has a max dropout of 1.3V and a max input voltage of 15V, so in theory the "5V" input should take anything from 4.6V-15V, though the LDO may get hot with higher voltages if you draw much current. It's thermally protected so it shouldn't burn up but may shut off.
 
 The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an external "splitter" if you want that.
+
+### Power-on reset
+
+The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1µF = 1msec time constant. The WT32-ETH01 board includes a separate R-C circuit for the LAN8720A Ethernet controller, also with 1msec time constant. These are quite fast, so if input voltage ramps slowly, the chip may not start reliably, [as discussed in this thread](https://wled.discourse.group/t/wt32-eth01-hangs-on-boot-after-psu-power-up/2937/5). This can be fixed if necessary by adding a slower external R-C circuit.
 
 ## Programming
 
