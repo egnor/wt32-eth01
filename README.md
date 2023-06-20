@@ -29,7 +29,7 @@ There are limitations on several of the pins; see "Strapping Pins"
 
 **IO0:** At boot, must be pulled low to program, must float or be pulled high
 to boot normally. You could theoretically use this pin after booting, but
-programmers will drive it, so best to avoid using it.
+programmers will drive it. Best to avoid using it.
 
 **IO1:** Set up as ESP32 serial output on boot. Used when programming
 and active by default when running. Best to avoid using it for anything else.
