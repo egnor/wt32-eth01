@@ -64,7 +64,9 @@ The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an extern
 
 ### Power-on reset
 
-The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1µF = 1msec time constant. The WT32-ETH01 board includes a separate R-C circuit for the LAN8720A Ethernet controller, also with 1msec time constant. These are quite fast, so if input voltage ramps slowly, the chip may not start reliably, [as discussed in this thread](https://wled.discourse.group/t/wt32-eth01-hangs-on-boot-after-psu-power-up/2937/5). This can be fixed if necessary by adding a slower external R-C circuit.
+The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1µF = 1msec time constant. The WT32-ETH01 board includes a separate R-C circuit for the LAN8720A Ethernet controller, also with 1msec time constant. These are quite fast, so if input voltage ramps slowly, the chip may not start reliably, [as discussed in this thread](https://wled.discourse.group/t/wt32-eth01-hangs-on-boot-after-psu-power-up/2937/5).
+
+This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100msec of reset delay), or a proper reset supervisor.
 
 ## Programming
 
