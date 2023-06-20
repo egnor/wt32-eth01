@@ -27,30 +27,28 @@ There are limitations on several of the pins; see "Strapping Pins"
 (section 3.3) in the
 [processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf).
 
-**IO0:** At boot, must be pulled low to program, must float to boot normally.
-After booting, may be used as a normal I/O pin, but watch out because a lot
-of programmers will drive it. Best to avoid using it for anything else.
+**IO0:** At boot, must be pulled low to program, must float or be pulled high
+to boot normally. You could theoretically use this pin after booting, but
+programmers will drive it, so best to avoid using it.
 
 **IO1:** Set up as ESP32 serial output on boot. Used when programming
 and active by default when running. Best to avoid using it for anything else.
 
-**IO2:** At boot, must float when programming. May be used normally after
-booting or if not programming. You can use this pin but make sure to
-disconnect it when programming.
+**IO2:** At boot, must float or be pulled low to program. You can use this pin
+(especially for output) but make sure nothing pulls it high while booting.
 
 **IO3:** Set up as ESP32 serial input on boot. Used when programming
 and active by default when running. Best to avoid using it for anything else.
 
-**IO5, IO15:** At boot, IO5 controls whether ESP32 libraries will print debug
-messages to the serial port (IO1). Also at boot, IO5 and IO15 together
+**IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries will print
+debug messages to the serial port (IO1). Also at boot, IO5 and IO15 together
 control timings of the module that lets the ESP32 act as an SD card.
-You are probably not using that module. So feel free to use these pins as
-usual but be aware of the possible effect on serial debug chatter
-(if you care).
+You are probably not using that module, so you can use these pins (especially
+for output) but note the effect on debug chatter if pulled while booting.
 
-**IO12:** Must float low at boot (there's an internal pull-down), otherwise
-the chip won't work. After booting, may be used as a normal I/O pin.
-Best to use only as an output (if at all) to avoid booting issues.
+**IO12 (MTDI):** Must float or be pulled low at boot, or the chip won't work
+(wrong voltage). You can use this pin after booting, but make sure nothing
+pulls it high while booting.
 
 **IO35, IO36, IO39:** These pins are input only, but are otherwise free to use.
 
