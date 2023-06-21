@@ -15,9 +15,13 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 ## Pins (and gotchas!)
 
 <table>
-  <tr> <td></td> <td align="right">EN ⏻</td> <td rowspan=13 align="center">WT32-ETH01<br>(ESP32)</td> <td>⭕ IO1</td> <td>💬 TXD</td> </tr>
-  <tr> <td></td> <td align="right">GND ⏚</td> <td>⭕ IO3</td> <td>🗨️ RXD</td> </tr>
-  <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⭕ IO0</td> <td>⏱️ REFCLK and 💻 BOOT</td> </tr>
+  <tr> <td></td>
+    <td align="right">EN ⏻</td>
+    <td rowspan=13 align="center">WT32-ETH01<br>(ESP32)</td>
+    <td>⭕ IO1 (reserved)</td> <td>💬 TXD</td>
+  </tr>
+  <tr> <td></td> <td align="right">GND ⏚</td> <td>⭕ IO3 (reserved)</td> <td>🗨️ RXD</td> </tr>
+  <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⭕ IO0 (reserved)</td> <td>⏱️ REFCLK and 💻 BOOT</td> </tr>
   <tr> <td></td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
   <tr> <td align="right">ADC1 CH4 📈</td> <td align="right">IO32 ↔️</td> <td>⬅️ IO39 (in only)</td> <td>📈 ADC1 CH3</td> </tr>
   <tr> <td align="right">ADC1 CH5 📈</td> <td align="right">IO33 ↔️</td> <td>⬅️ IO36 (in only)</td> <td>📈 ADC1 CH0</td> </tr>
