@@ -22,7 +22,7 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
   </tr>
   <tr> <td></td> <td align="right">GND ⏚</td> <td>⭕ IO3 (reserved)</td> <td>🗨️ RXD</td> </tr>
   <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⭕ IO0 (reserved)</td> <td>⏱️ REFCLK and 💻 BOOT</td> </tr>
-  <tr> <td></td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
+  <tr> <td>pull low to reset</td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
   <tr> <td align="right">ADC1 CH4 📈</td> <td align="right">IO32 ↔️</td> <td>⬅️ IO39 (in only)</td> <td>📈 ADC1 CH3</td> </tr>
   <tr> <td align="right">ADC1 CH5 📈</td> <td align="right">IO33 ↔️</td> <td>⬅️ IO36 (in only)</td> <td>📈 ADC1 CH0</td> </tr>
   <tr> <td></td> <td align="right">IO5 ↔️</td> <td>↔️ IO15</td> <td>📉 ADC2 CH3</td> </tr>
@@ -31,7 +31,7 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
   <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⬅️ IO35 (in only)</td> <td>📈 ADC1 CH7</td> </tr>
   <tr> <td></td> <td align="right">GND ⏚</td> <td>↔️ IO4</td> <td>📉 ADC2 CH0</td> </tr>
   <tr> <td></td> <td align="right">5V ⚡</td> <td>▶️ IO2</td> <td>⚠️ must float to program</td> </tr>
-  <tr> <td></td> <td align="right">LINK 🖧</td> <td>⏚ GND</td> <td></td> </tr>
+  <tr> <td>ethernet link light</td> <td align="right">LINK 🖧</td> <td>⏚ GND</td> <td></td> </tr>
 </table>
 
 **LEGEND**<br>
@@ -41,8 +41,6 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 ↔️ - General purpose I/O<br>
 📈 - Analog input on ADC1<br> 
 📉 - Analog input on ADC2 (conflicts with wi-fi)<br>
-⚡ and ⏚ - Power and ground<br>
-⏻ - Chip enable (pull low to reset)<br>
 
 Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English labels), and [pin reference for the ESP32 module itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
 
