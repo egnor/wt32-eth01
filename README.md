@@ -163,6 +163,7 @@ ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 - [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) is the Ethernet physical layer controller (PHY)
 - [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip
 - "Left Interface" and "Right Interface" are just the two pin headers
+- "烧录接口" means "programming interface" (the six topmost pins)
 
 There are multiple revisions of the device -- I've seen "V1.2" and "V1.4" on the silkscreen, and the trace routing does differ -- but the differences are unknown. You can get it with or without pin headers pre-soldered on.
 
