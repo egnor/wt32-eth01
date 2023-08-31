@@ -79,7 +79,7 @@ but make sure nothing pulls it high while booting.
 
 You may supply 3.3V power on the `3V3` pins, or 5V power on the `5V` pins, but not both at once!
 
-The schematic lists an "LM1117F-1.8V" voltage regulator, which is clearly wrong-- the output is 3.3V, not 1.8V, and also the actual part on the board appears to be an [AMS1117-3.3](http://www.advanced-monolithic.com/pdf/ds1117.pdf). This LDO has a max dropout of 1.3V and a max input voltage of 15V, so in theory the "5V" input should take anything from 4.6V-15V, though the LDO may get hot with higher voltages if you draw much current. It's thermally protected so it shouldn't burn up but may shut off.
+The schematic lists an "LM1117F-1.8V" voltage regulator, which is clearly wrong-- the output is 3.3V, not 1.8V, and also the actual part on the board is marked "AMS1117-3.3". If this were a [true AMS1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf) it would have a max input of 15V and thermal protection, but it doesn't actually seem to have either; with 12V input, many WT32-ETH01 parts will generate smoke. Probably it's a [low-spec AMS1117 knock-off](https://goughlui.com/2021/03/27/note-linear-regulator-woes-when-is-an-ams1117-not-an-ams1117/) of some kind. So, I'd limit its input to 6V or so, or use your own 3.3V source if you need to.
 
 The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an external "splitter" if you want that.
 
@@ -87,7 +87,7 @@ The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an extern
 
 The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1µF = 1msec time constant. The WT32-ETH01 board includes a separate R-C circuit for the LAN8720A Ethernet controller, also with 1msec time constant. These are quite fast, so if input voltage ramps slowly, the chip may not start reliably, [as discussed in this thread](https://wled.discourse.group/t/wt32-eth01-hangs-on-boot-after-psu-power-up/2937/5).
 
-This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100msec of reset delay), or a proper reset supervisor.
+This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100msec of reset delay), a proper reset supervisor, or a power supply/regulator with a `PGOOD` (or `/RESET`) signal you can tie to `EN`.
 
 ## Programming
 
