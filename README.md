@@ -89,6 +89,11 @@ The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1�
 
 This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100msec of reset delay), a proper reset supervisor, or a power supply/regulator with a `PGOOD` (or `/RESET`) signal you can tie to `EN`.
 
+## Schematic and Footprint
+*Contributed by Dakota Winslow*
+
+Included here is a KiCad symbol and footprint. The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
+
 ## Programming
 
 Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. As with most ESP32 boards, using a regular USB-serial adapter is possible but annoying (make sure to use 3.3V output if you try!). You'll need to ground IO0 when booting.
@@ -171,5 +176,5 @@ Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its
 
 ## TODO
 
-- Post KiCad files for footprints, breakout boards, and programming connectors
+- Post KiCad files for ~footprints~, breakout boards, and programming connectors
 - Discussion of issues reported elsewhere?
