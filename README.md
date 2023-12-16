@@ -96,11 +96,17 @@ Included here is a KiCad symbol and footprint. The symbol is arranged by actual 
 
 ## Programming
 
-Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. As with most ESP32 boards, using a regular USB-serial adapter is possible but annoying (make sure to use 3.3V output if you try!). You'll need to ground IO0 when booting.
+Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. As with most ESP32 boards, using a regular USB-serial adapter is possible but a bit annoying:
 
-Instead, I recommend [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (ought to work, but untried).
+- You need a 3.3V TTL adapter, not 5V (and certainly not RS-232!)
+- To load code, the ESP32 needs [the IO0 (BOOT) pin grounded while toggling EN](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)
+- You can [manually connect those pins to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) (with wires, or buttons) but this gets old fast
+- You can use [automatic bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader) via DTR and RTS, which needs a mini circuit (image courtesy [cyberboy666](https://github.com/cyberboy666))
 
-Both these products have 6 pins (in a different order, sadly) that you connect to the 6 pins (3 on either side) of the top (WiFi antenna end) of the WT32-ETH01, at which point `esptool` will work out ot the box. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
+<img alt="Dual transistor boot circuit diagram" src="https://github.com/egnor/wt32-eth01/assets/279819/94c01e9d-f208-4e3d-bd2d-2fac7a73c967" height=300>
+<img alt="Perfboard with boot circuit" src="https://github.com/egnor/wt32-eth01/assets/279819/a67229d2-e36c-419e-89c5-921064ddafea" height=300>
+
+Or, you can use [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (untested, but ought to work). Both products include a USB-serial adapter and the automatic bootloading circuit above. Both have 6 pins (in a different order, sadly) that you connect to the 6 pins (3 on either side) of the top (WiFi antenna end) of the WT32-ETH01, at which point `esptool` will work out ot the box. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
 
 When wiring up a programmer, make sure RX from the programmer goes to TX on the board and vice versa! Also mind the power connections. The M5Stack programmer has a 3.3V output, the wESP32-Prog has a 5V output, make sure you use the right power pin if you want the programmer to power the board. (The 5V input isn't actually in the top 6 "programming pins", but it is labeled.)
 
