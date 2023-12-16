@@ -101,7 +101,7 @@ Astute readers will have noticed this part has no USB port, so you need an adapt
 - You need a 3.3V TTL adapter, not 5V (and certainly not RS-232!)
 - To load code, the ESP32 needs [the IO0 (BOOT) pin grounded while toggling EN](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)
 - You can [manually connect those pins to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) (with wires, or buttons) but this gets old fast
-- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit (via [cyberboy666](https://github.com/cyberboy666) using [this adapter](https://www.amazon.com/CH340G-Breakout-Serial-arduino-downloader/dp/B07TBQCX2V))
+- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit (via [cyberboy666](https://github.com/egnor/wt32-eth01/issues/3))
 
 <img alt="Dual transistor boot circuit diagram" src="https://github.com/egnor/wt32-eth01/assets/279819/94c01e9d-f208-4e3d-bd2d-2fac7a73c967" height=300>
 <img alt="Perfboard with boot circuit" src="https://github.com/egnor/wt32-eth01/assets/279819/a67229d2-e36c-419e-89c5-921064ddafea" height=300>
