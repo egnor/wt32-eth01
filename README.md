@@ -44,6 +44,8 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 
 Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English labels), and [pin reference for the ESP32 module itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
 
+Some documents ([like this listing](https://www.amazon.com/dp/B09Z298QJQ)) have pins IO5 and IO35 swapped in comparison to the layout above. All the physical hardware I've seen has the pins laid out as above, but check to make sure!
+
 ### Beware!
 
 There are limitations on several of the pins; see "Strapping Pins"
@@ -96,23 +98,31 @@ Included here is a KiCad symbol and footprint. The symbol is arranged by actual 
 
 ## Programming
 
-Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. As with most ESP32 boards, using a regular USB-serial adapter is possible but a bit annoying:
+Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. There are several possibilities, listed below; whichever one you use, [PlatformIO's WT32-ETH01 board support](https://docs.platformio.org/en/latest/boards/espressif32/wt32-eth01.html) or the [Arduino IDE ESP32 add-on](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/installing.html) (selecting `ESP32 Dev Board`) should work for programming, or you can use [esptool.py](https://github.com/espressif/esptool) directly if you're hardcore. (I'm not that hardcore.)
+
+### Programming with a downloader gizmo
+
+The most convenient programming solution is a gizmo like [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (untested, but ought to work). These products include a USB-serial adapter and an automatic bootloading circuit. They have 6 pins (in different orders, sadly) that connect to the 6 "programming" pins at the top (WiFi antenna end) of the WT32-ETH01, at which point programming should work. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
+
+When wiring up the gizmo, make sure gizmo RX goes to WT32-ETH01 TX and vice versa. Also mind the power connections; the M5Stack programmer has a 3.3V output, the wESP32-Prog has a 5V output, make sure you use the right power pin if you want the programmer to power the board. (The 5V input isn't actually in the top 6 "programming pins", but it is labeled.)
+
+### Programming with a USB-serial adapter
+
+You can also program the WT32-ETH01 with a regular USB-serial adapter, but it is a bit tricky:
 
 - You need a 3.3V TTL adapter, not 5V (and certainly not RS-232!)
 - To load code, the ESP32 needs [the IO0 (BOOT) pin grounded while toggling EN](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)
 - You can [manually connect those pins to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) (with wires, or buttons) but this gets old fast
-- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit (via [cyberboy666](https://github.com/egnor/wt32-eth01/issues/3))
+- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit (credit [cyberboy666](https://github.com/egnor/wt32-eth01/issues/3))
 
 <img alt="Dual transistor boot circuit diagram" src="https://github.com/egnor/wt32-eth01/assets/279819/94c01e9d-f208-4e3d-bd2d-2fac7a73c967" height=300>
 <img alt="Perfboard with boot circuit" src="https://github.com/egnor/wt32-eth01/assets/279819/a67229d2-e36c-419e-89c5-921064ddafea" height=300>
 
-More conveniently, you can use a gizmo like [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (untested, but ought to work). These products include a USB-serial adapter and the automatic bootloading circuit above. They have 6 pins (in different orders, sadly) that connect to the 6 "programming" pins at the top (WiFi antenna end) of the WT32-ETH01, at which point `esptool` works out ot the box. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
+When wiring up a serial adapter, make sure adapter RX goes to WT32-ETH01 TX and vice versa. You will also need to power the WT32-ETH01 somehow, of course.
 
-In any case, when wiring up a programmer, make sure RX from the programmer goes to TX on the board and vice versa! Also mind the power connections. The M5Stack programmer has a 3.3V output, the wESP32-Prog has a 5V output, make sure you use the right power pin if you want the programmer to power the board. (The 5V input isn't actually in the top 6 "programming pins", but it is labeled.)
+### Programming with an old Arduino
 
-[PlatformIO has board support for the WT32-ETH01](https://docs.platformio.org/en/latest/boards/espressif32/wt32-eth01.html) which works for me "out of the box".
-
-You may also be able to use the [Arduino IDE ESP32 add-on](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/installing.html) if you pick `ESP32 Dev Board`, but I haven't tried this.
+If you don't have a downloader gizmo or serial adapter, but do have an Arduino Uno or similar with onboard USB-serial, you can use that (credit [comporder1](https://github.com/egnor/wt32-eth01/issues/4)). Remove the Arduino microcontroller IC, then use four wires to link 3v3, GND, TX, and RX between the Arduino and WT32-ETH01. (Do NOT cross TX/RX with this method.) You will need to [manually connect IO0 (BOOT) to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) while powering on the WT32-ETH01 to put it in bootloader mode, but then programming should work.
 
 ## Using Ethernet
 
