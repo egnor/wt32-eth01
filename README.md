@@ -126,13 +126,20 @@ If you don't have a downloader gizmo or serial adapter, but do have an Arduino U
 
 ## Using Ethernet
 
-WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet takes a bit of configuration.
+WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet takes a bit of configuration for the WT32-ETH01:
+- The interface to the Ethernet PHY uses GPIO 23 for MDC and GPIO 18 for MDIO
+- There's an external oscillator that drives pin 0
+- That oscillator is enabled by setting GPIO 16 high
+- The PHY reset pin is NOT wired to a GPIO (it gets reset at startup)
 
 [The ESP32-Arduino "Ethernet" library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html) should work, though I haven't tried it. You will need to call something like this (untested!!):
 
 ```
 ETH.begin(1, 16, 23, 18, ETH_PHY_LAN8720);
 ```
+
+(Note that pin 16 is being configured as PHY reset, even though it's not actually the reset pin,
+this will cause the library code to set it high which is needed to enable the oscillator.)
 
 I personally use code like this based on ESP-IDF interfaces:
 
