@@ -12,6 +12,11 @@ It's marketed as a "serial port to Ethernet module" and comes loaded with firmwa
 
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much. Also see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
 
+## Sizes
+
+Dimensions: 60mm x 26mm x 17mm
+Weight: 15.4g
+
 ## Pins (and gotchas!)
 
 <table>
