@@ -12,11 +12,6 @@ It's marketed as a "serial port to Ethernet module" and comes loaded with firmwa
 
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much. Also see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
 
-## Sizes
-
-Dimensions: 60mm x 26mm x 17mm
-Weight: 15.4g
-
 ## Pins (and gotchas!)
 
 <table>
@@ -47,7 +42,7 @@ Weight: 15.4g
 📈 - Analog input on ADC1<br> 
 📉 - Analog input on ADC2 (conflicts with wi-fi)<br>
 
-Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English labels), and [pin reference for the ESP32 module itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
+Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English), and [pin reference for the ESP32 itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
 
 Some documents ([like this listing](https://www.amazon.com/dp/B09Z298QJQ)) have pins IO5 and IO35 swapped in comparison to the layout above. All the physical hardware I've seen has the pins laid out as above, but check to make sure!
 
@@ -82,6 +77,12 @@ but make sure nothing pulls it high while booting.
 
 **IO35, IO36, IO39:** These pins are input only, but are otherwise free to use.
 
+## Physical dimensions and footprint
+
+The WT32-ETH01 board is 60mm x 26mm x 17mm, and weighs 15.4g. (Thanks [Damiano Donati](https://github.com/damdo)!)
+
+By [Dakota Winslow](https://github.com/dakotawinslow/): This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
+
 ## Power
 
 You may supply 3.3V power on the `3V3` pins, or 5V power on the `5V` pins, but not both at once!
@@ -95,11 +96,6 @@ The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an extern
 The WT32-S1 module (silver box) includes an R-C circuit on EN with 10KΩ × 0.1µF = 1msec time constant. The WT32-ETH01 board includes a separate R-C circuit for the LAN8720A Ethernet controller, also with 1msec time constant. These are quite fast, so if input voltage ramps slowly, the chip may not start reliably, [as discussed in this thread](https://wled.discourse.group/t/wt32-eth01-hangs-on-boot-after-psu-power-up/2937/5).
 
 This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100msec of reset delay), a proper reset supervisor, or a power supply/regulator with a `PGOOD` (or `/RESET`) signal you can tie to `EN`.
-
-## Schematic and Footprint
-*Contributed by Dakota Winslow*
-
-Included here is a KiCad symbol and footprint. The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
 
 ## Programming
 
