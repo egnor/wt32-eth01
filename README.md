@@ -133,16 +133,26 @@ WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet tak
 - That oscillator is enabled by setting GPIO 16 high
 - The PHY reset pin is NOT wired to a GPIO (it gets reset at startup)
 
-[The ESP32-Arduino "Ethernet" library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html) should work, though I haven't tried it. You will need to call something like this (untested!!):
+### Using the ESP32-Arduino "ETH" library
+
+The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html)  that comes with the
+ESP32 Arduino runtime should work if started like this:
 
 ```
 ETH.begin(1, 16, 23, 18, ETH_PHY_LAN8720);
 ```
 
 (Note that pin 16 is being configured as PHY reset, even though it's not actually the reset pin,
-this will cause the library code to set it high which is needed to enable the oscillator.)
+this will cause the library code to set it high which is needed to enable the oscillator.) This will
+initialize the
+[ESP-IDF lwIP subsystem](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/lwip.html),
+and most Arduino networking code should work.
 
-I personally use code like this based on ESP-IDF interfaces:
+### Using ESP-IDF with Ethernet
+
+If you're not using the Arduino runtime, or don't like the `ETH` library, or want finer control,
+you can use [ESP-IDF](https://idf.espressif.com/) interfaces directly. As above, this will
+initialize lwIP, so again most networking code should work.
 
 ```
 #include <esp_netif.h>
@@ -182,6 +192,27 @@ auto const eth_netif_glue = esp_eth_new_netif_glue(eth_handle);
 ESP_ERROR_CHECK(esp_netif_attach(global_netif, eth_netif_glue));
 ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 ```
+
+### Using ESPHome with Ethernet
+
+If you're using [ESPHome firmware](https://esphome.io/), you can configure it to use WT32-ETH01
+You'll want to add this to the [device configuration](https://esphome.io/components/ethernet.html):
+
+```
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO0_IN
+  phy_addr: 1
+  power_pin: GPIO16
+```
+
+### Using Tasmota with Ethernet
+
+If you're using [Tasmota firmware](https://tasmota.github.io/docs/), use
+[the WT32-ETH01 configuration](https://tasmota.github.io/docs/ESP32-Devices/#wt32-eth01)
+as documented.
 
 ## Internal details
 
