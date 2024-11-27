@@ -39,7 +39,7 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 ▶️ - Recommended output only (avoid driving externally)<br>
 ⬅️ - Input only<br>
 ↔️ - General purpose I/O<br>
-📈 - Analog input on ADC1<br> 
+📈 - Analog input on ADC1<br>
 📉 - Analog input on ADC2 (conflicts with wi-fi)<br>
 
 Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English), and [pin reference for the ESP32 itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
@@ -191,6 +191,39 @@ global_netif = esp_netif_new(&netif_config);
 auto const eth_netif_glue = esp_eth_new_netif_glue(eth_handle);
 ESP_ERROR_CHECK(esp_netif_attach(global_netif, eth_netif_glue));
 ESP_ERROR_CHECK(esp_eth_start(eth_handle));
+```
+
+### Using Rust / esp-idf-svc
+
+If you're so inclined, it's also quite easy to use ESP-IDF from rust:
+
+```rust
+let sysloop = esp_idf_svc::EspSystemEventLoop::take()?; // Or already have this handle
+
+let clock = esp_idf_svc::eth::RmiiClockConfig::<gpio::Gpio0, gpio::Gpio16, gpio::Gpio17>::Input(
+    pins.gpio0,
+);
+let eth_driver = esp_idf_svc::eth::EthDriver::new_rmii(
+    peripherals.mac,
+    pins.gpio25, // rxd0
+    pins.gpio26, // rxd1
+    pins.gpio27, // crs dv
+    pins.gpio23, // mdc
+    pins.gpio22, // txd1
+    pins.gpio21, // tx en
+    pins.gpio19, // txd0
+    pins.gpio18, // mdio
+    clock,
+    Some(pins.gpio16), // nRST isn't connected per the datasheet, but per the above
+    comment we set it to 16.
+    esp_idf_svc::eth::RmiiEthChipset::LAN87XX,
+    Some(1), // phy addr
+    sysloop.clone(),
+)?;
+let eth = esp_idf_svc::eth::EspEth::wrap(eth_driver)?;
+let mut eth = esp_idf_svc::eth::BlockingEth::wrap(eth, sysloop.clone())?;
+
+eth.start()?;
 ```
 
 ### Using ESPHome with Ethernet
