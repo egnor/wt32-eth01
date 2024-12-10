@@ -135,24 +135,17 @@ WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet tak
 
 ### Using the ESP32-Arduino "ETH" library
 
-The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html)  that comes with the
-ESP32 Arduino runtime should work if started like this:
+The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html)  that comes with the ESP32 Arduino runtime should work if started like this:
 
 ```
-ETH.begin(1, 16, 23, 18, ETH_PHY_LAN8720);
+ETH.begin(ETH_PHY_LAN8720, 1, 23, 18, 16, ETH_CLOCK_GPIO17_OUT);
 ```
 
-(Note that pin 16 is being configured as PHY reset, even though it's not actually the reset pin,
-this will cause the library code to set it high which is needed to enable the oscillator.) This will
-initialize the
-[ESP-IDF lwIP subsystem](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/lwip.html),
-and most Arduino networking code should work.
+(Note that pin 16 is being configured as PHY reset, even though it's not actually the reset pin, this will cause the library code to set it high which is needed to enable the oscillator.) This will initialize the [ESP-IDF lwIP subsystem](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/lwip.html), and most Arduino networking code should work.
 
 ### Using ESP-IDF with Ethernet
 
-If you're not using the Arduino runtime, or don't like the `ETH` library, or want finer control,
-you can use [ESP-IDF](https://idf.espressif.com/) interfaces directly. As above, this will
-initialize lwIP, so again most networking code should work.
+If you're not using the Arduino runtime, or don't like the `ETH` library, or want finer control, you can use [ESP-IDF](https://idf.espressif.com/) interfaces directly. As above, this will initialize lwIP, so again most networking code should work.
 
 ```
 #include <esp_netif.h>
