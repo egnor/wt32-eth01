@@ -138,7 +138,12 @@ WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet tak
 The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html)  that comes with the ESP32 Arduino runtime should work if started like this:
 
 ```
-ETH.begin(ETH_PHY_LAN8720, 1, 23, 18, 16, ETH_CLOCK_GPIO17_OUT);
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  // The argument order changed in esp32-arduino v3+
+  ETH.begin(ETH_PHY_LAN8720, 1, 23, 18, 16, ETH_CLOCK_GPIO0_IN);
+#else
+  ETH.begin(1, 16, 23, 18, ETH_PHY_LAN8720, ETH_CLOCK_GPIO0_IN);
+#endif
 ```
 
 (Note that pin 16 is being configured as PHY reset, even though it's not actually the reset pin, this will cause the library code to set it high which is needed to enable the oscillator.) This will initialize the [ESP-IDF lwIP subsystem](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/lwip.html), and most Arduino networking code should work.
