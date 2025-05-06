@@ -68,11 +68,11 @@ There are limitations on several of the pins; see "Strapping Pins"
 
 ## Physical dimensions and footprint
 
-The WT32-ETH01 board is 60mm x 26mm x 17mm, and weighs 15.4g. (Thanks [Damiano Donati](https://github.com/damdo)!)
+The WT32-ETH01 board is 60mm x 26mm x 17mm, and weighs 15.4g. _(Thanks [damdo](https://github.com/egnor/wt32-eth01/pull/10)!)_
 
-This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
+This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor. _(Thanks [dakotawinslow](https://github.com/egnor/wt32-eth01/pull/2) and [mcenno](https://github.com/egnor/wt32-eth01/pull/17)!)_
 
-(Thanks to [Dakota Winslow](https://github.com/dakotawinslow/)!)
+You can also find 3D models in [STEP](WT32-ETH01.step) and [WRL](WT32-ETH01.wrl) formats. _(Thanks [oliv3r](https://github.com/egnor/wt32-eth01/pull/11)!)_
 
 ## Power
 
@@ -204,6 +204,8 @@ EthernetClient   ethClient;
 You can then use things like [PubSubClient](http://pubsubclient.knolleary.net/) that use that interface.
 
 ### Using Rust / esp-idf-svc
+
+_(Thanks [richo](https://github.com/egnor/wt32-eth01/pull/13)!)_
 
 If you're so inclined, it's also quite easy to use ESP-IDF from rust:
 
