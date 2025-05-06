@@ -52,36 +52,27 @@ There are limitations on several of the pins; see "Strapping Pins"
 (section 3.3) in the
 [processor data sheet](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf).
 
-**IO0:** At boot, must be pulled low to program, must float or be pulled high
-to boot normally. After booting, used to receive the Ethernet 50Mhz clock
-(enabled by IO16). Best to avoid any other use.
+- **IO0:** At boot, must be pulled low to program, must float or be pulled high to boot normally. After booting, used to receive the Ethernet 50Mhz clock (enabled by IO16). Best to avoid any other use.
 
-**IO1:** ESP32 serial output. Used when programming and active by default
-when running. Best to avoid any other use.
+- **IO1:** ESP32 serial output. Used when programming and active by default when running. Best to avoid any other use.
 
-**IO2:** At boot, must float or be pulled low to program. You can use this pin
-(especially for output) but make sure nothing pulls it high while booting.
+- **IO2:** At boot, must float or be pulled low to program. You can use this pin (especially for output) but make sure nothing pulls it high while booting.
 
-**IO3:** ESP32 serial input. Used when programming and active by default
-when running. Best to avoid any other use.
+- **IO3:** ESP32 serial input. Used when programming and active by default when running. Best to avoid any other use.
 
-**IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries will print
-debug messages to the serial port (IO1). Also at boot, IO5 and IO15 together
-control timings of the module that lets the ESP32 act as an SD card.
-You are probably not using that module, so you can use these pins (especially
-for output) but note the effect on debug chatter if pulled while booting.
+- **IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries will print debug messages to the serial port (IO1). Also at boot, IO5 and IO15 together control timings of the module that lets the ESP32 act as an SD card. You are probably not using that module, so you can use these pins (especially for output) but note the effect on debug chatter if pulled while booting.
 
-**IO12 (MTDI):** At boot, must float or be pulled low or the chip won't work
-(wrong voltage). You can use this pin (especially for output) after booting,
-but make sure nothing pulls it high while booting.
+- **IO12 (MTDI):** At boot, must float or be pulled low or the chip won't work (wrong voltage). You can use this pin (especially for output) after booting, but make sure nothing pulls it high while booting.
 
-**IO35, IO36, IO39:** These pins are input only, but are otherwise free to use.
+- **IO35, IO36, IO39:** These pins are input only, but are otherwise free to use.
 
 ## Physical dimensions and footprint
 
 The WT32-ETH01 board is 60mm x 26mm x 17mm, and weighs 15.4g. (Thanks [Damiano Donati](https://github.com/damdo)!)
 
-By [Dakota Winslow](https://github.com/dakotawinslow/): This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
+This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor.
+
+(Thanks to [Dakota Winslow](https://github.com/dakotawinslow/)!)
 
 ## Power
 
@@ -114,16 +105,20 @@ You can also program the WT32-ETH01 with a regular USB-serial adapter, but it is
 - You need a 3.3V TTL adapter, not 5V (and certainly not RS-232!)
 - To load code, the ESP32 needs [the IO0 (BOOT) pin grounded while toggling EN](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html)
 - You can [manually connect those pins to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) (with wires, or buttons) but this gets old fast
-- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit (credit [cyberboy666](https://github.com/egnor/wt32-eth01/issues/3))
+- Or, use [automatic DTR/RTS bootloading](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#automatic-bootloader), which needs this mini circuit:
 
-<img alt="Dual transistor boot circuit diagram" src="https://github.com/egnor/wt32-eth01/assets/279819/94c01e9d-f208-4e3d-bd2d-2fac7a73c967" height=300>
+<img alt="Dual transistor boot circuit diagram" src="https://github.com/egnor/wt32-eth01/assets/279819/94c01e9d-f208-4e3d-bd2d-2fac7a73c967" height=300> &nbsp;
 <img alt="Perfboard with boot circuit" src="https://github.com/egnor/wt32-eth01/assets/279819/a67229d2-e36c-419e-89c5-921064ddafea" height=300>
+
+_(Thanks [cyberboy666](https://github.com/egnor/wt32-eth01/issues/3)!)_
 
 When wiring up a serial adapter, make sure adapter RX goes to WT32-ETH01 TX and vice versa. You will also need to power the WT32-ETH01 somehow, of course.
 
 ### Programming with an old Arduino
 
-If you don't have a downloader gizmo or serial adapter, but do have an Arduino Uno or similar with onboard USB-serial, you can use that (credit [comporder1](https://github.com/egnor/wt32-eth01/issues/4)). Remove the Arduino microcontroller IC, then use four wires to link 3v3, GND, TX, and RX between the Arduino and WT32-ETH01. (Do NOT cross TX/RX with this method.) You will need to [manually connect IO0 (BOOT) to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) while powering on the WT32-ETH01 to put it in bootloader mode, but then programming should work.
+_(Thanks [comporder1](https://github.com/egnor/wt32-eth01/issues/4)!)_
+
+If you don't have a downloader gizmo or serial adapter, but do have an Arduino Uno or similar with onboard USB-serial, you can use it. Remove the Arduino microcontroller IC, then use four wires to link 3v3, GND, TX, and RX between the Arduino and WT32-ETH01. (Do NOT cross TX/RX with this method.) You will need to [manually connect IO0 (BOOT) to ground](https://docs.espressif.com/projects/esptool/en/latest/esp32/advanced-topics/boot-mode-selection.html#manual-bootloader) while powering on the WT32-ETH01 to put it in bootloader mode, but then programming should work.
 
 ## Using Ethernet
 
@@ -135,7 +130,9 @@ WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet tak
 
 ### Using the ESP32-Arduino "ETH" library
 
-The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html)  that comes with the ESP32 Arduino runtime should work if started like this:
+_(Thanks [ProgrammingJohn](https://github.com/egnor/wt32-eth01/issues/14) and [EchterAgo](https://github.com/egnor/wt32-eth01/issues/16)!)_
+
+The [`ETH` library](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/api/ethernet.html) that comes with the ESP32 Arduino runtime should work if started like this:
 
 ```
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
@@ -191,6 +188,21 @@ ESP_ERROR_CHECK(esp_netif_attach(global_netif, eth_netif_glue));
 ESP_ERROR_CHECK(esp_eth_start(eth_handle));
 ```
 
+### Using EthernetESP32
+
+_(Thanks [marclefevere](https://github.com/egnor/wt32-eth01/issues/20)!)_
+
+If you want an [EthernetClient](https://reference.arduino.cc/reference/en/libraries/ethernet/ethernetclient/)-type interface, [EthernetESP32](https://github.com/Networking-for-Arduino/EthernetESP32) is the library to use. After adding the library:
+
+```
+#include <EthernetESP32.h>
+
+EMACDriver       driver(ETH_PHY_LAN8720, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_POWER);
+EthernetClient   ethClient;
+```
+
+You can then use things like [PubSubClient](http://pubsubclient.knolleary.net/) that use that interface.
+
 ### Using Rust / esp-idf-svc
 
 If you're so inclined, it's also quite easy to use ESP-IDF from rust:
@@ -226,8 +238,9 @@ eth.start()?;
 
 ### Using ESPHome with Ethernet
 
-If you're using [ESPHome firmware](https://esphome.io/), you can configure it to use WT32-ETH01
-You'll want to add this to the [device configuration](https://esphome.io/components/ethernet.html):
+_(Thanks [mati294](https://github.com/egnor/wt32-eth01/issues/12)!)_
+
+If you're using [ESPHome firmware](https://esphome.io/), you'll want to add this to the [device configuration](https://esphome.io/components/ethernet.html):
 
 ```
 ethernet:
