@@ -25,7 +25,7 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
   <tr> <td align="right">pull low to reset</td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
   <tr> <td align="right">ADC1 CH4 📈</td> <td align="right">IO32 ↔️</td> <td>⬅️ IO39 (in only, no pull)</td> <td>📈 ADC1 CH3</td> </tr>
   <tr> <td align="right">ADC1 CH5 📈</td> <td align="right">IO33 ↔️</td> <td>⬅️ IO36 (in only, no pull)</td> <td>📈 ADC1 CH0</td> </tr>
-  <tr> <td></td> <td align="right">IO5 ↔️</td> <td>↔️ IO15 ⚠️</td> <td>📉 ADC2 CH3</td> </tr>
+  <tr> <td></td> <td align="right">IO5 ↔️</td> <td>↔️ IO15</td> <td>📉 ADC2 CH3</td> </tr>
   <tr> <td></td> <td align="right">IO17 ↔️</td> <td>↔️ IO14</td> <td>📉 ADC2 CH6</td> </tr>
   <tr> <td></td> <td align="right">GND ⏚</td> <td>▶️ IO12</td> <td>⚠️ must float at boot</td> </tr>
   <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⬅️ IO35 (in only, no pull)</td> <td>📈 ADC1 CH7</td> </tr>
@@ -60,7 +60,7 @@ There are limitations on several of the pins; see "Strapping Pins"
 
 - **IO3:** ESP32 serial input. Used when programming and active by default when running. Best to avoid any other use.
 
-- **IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries print debug messages to serial (IO1). Also at boot, IO5 and IO15 together control SD card emulation timings (you probably don't care). You can use these pins (especially for output) but note the effects if pulled while booting. Finally, there are [anecdotal reports of trouble](https://github.com/egnor/wt32-eth01/issues/25) if IO15 is pulled at boot.
+- **IO5, IO15 (MTDO):** At boot, IO5 controls whether ESP32 libraries print debug messages to serial (IO1). Also at boot, IO5 and IO15 together control SD card emulation timings (you probably don't care). You can use these pins (especially for output) but note the effects if pulled while booting.
 
 - **IO12 (MTDI):** At boot, must float or be pulled low or the chip won't work (wrong voltage). You can use this pin (especially for output) after booting, but make sure nothing pulls it high while booting.
 
