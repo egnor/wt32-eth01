@@ -203,7 +203,7 @@ EthernetClient   ethClient;
 
 You can then use things like [PubSubClient](http://pubsubclient.knolleary.net/) that use that interface.
 
-### Using Rust / esp-idf-svc
+### Using Rust with Ethernet
 
 _(Thanks [richo](https://github.com/egnor/wt32-eth01/pull/13) and
 [swgiacomelli](https://github.com/swgiacomelli)!)_
