@@ -8,7 +8,7 @@ The WT32-ETH01 is effectively a small, cheap [ESP32](https://en.wikipedia.org/wi
 
 There aren't a ton of ESP32 boards with Ethernet, and the WT32-ETH01 is by far the smallest, cheapest, and simplest. (The [OLIMEX ESP32-POE](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE/open-source-hardware) and [wESP32](https://wesp32.com/) are the other notable options.) So, if you want a cheap-and-cheerful ESP32 board with the reliability of a wired network, the WT32-ETH01 may be a good choice.
 
-It's marketed as a "serial port to Ethernet module" and comes loaded with firmware that lets you send [various "AT" commands](https://core-electronics.com.au/attachments/localcontent/ATCommandsofWT32-ETH01WiredModule_v1_1135593e704.pdf) over 3.3V serial to set up networking, open connections and exchange data. For most of us, it's more interesting to just flash our own programs on the unit and use standard ESP32 networking libraries.
+It's marketed as a "serial port to Ethernet module" and comes loaded with firmware that lets you send [various "AT" commands](WT32-ETH01-commands-v1.1-en.pdf) over 3.3V serial to set up networking, open connections and exchange data. For most of us, it's more interesting to just flash our own programs on the unit and use standard ESP32 networking libraries.
 
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much. Also see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
 
@@ -42,7 +42,7 @@ Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't exp
 📈 - Analog input on ADC1<br>
 📉 - Analog input on ADC2 (conflicts with wi-fi)<br>
 
-Also see [the data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) ([an older version](WT32-ETH01_manual.pdf) has better English), and [pin reference for the ESP32 itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
+Also see [the data sheet/manual](WT32-ETH01-datasheet-v1.4-en.pdf) and [pin reference for the ESP32 itself](https://randomnerdtutorials.com/esp32-pinout-reference-gpios/).
 
 Some documents ([like this listing](https://www.amazon.com/dp/B09Z298QJQ)) have pins IO5 and IO35 swapped in comparison to the layout above. All the physical hardware I've seen has the pins laid out as above, but check to make sure!
 
@@ -262,7 +262,7 @@ as documented.
 
 ## Internal details
 
-[The data sheet](WT32-ETH01_datasheet_V1.3-en.pdf) gives a pretty good overview of the product, including a system block diagram:
+[The data sheet/manual](WT32-ETH01-datasheet-v1.4-en.pdf) gives a pretty good overview of the product, including a system block diagram:
 
 <img alt="WT32-ESP01 system block diagram" src="https://user-images.githubusercontent.com/279819/211134688-df67c565-bd14-44cd-bdfb-e28279180e42.png" width=600>
 
