@@ -205,7 +205,8 @@ You can then use things like [PubSubClient](http://pubsubclient.knolleary.net/) 
 
 ### Using Rust / esp-idf-svc
 
-_(Thanks [richo](https://github.com/egnor/wt32-eth01/pull/13)!)_
+_(Thanks [richo](https://github.com/egnor/wt32-eth01/pull/13) and
+[swgiacomelli](https://github.com/swgiacomelli)!)_
 
 If you're so inclined, it's also quite easy to use ESP-IDF from rust:
 
@@ -237,6 +238,11 @@ let mut eth = esp_idf_svc::eth::BlockingEth::wrap(eth, sysloop.clone())?;
 
 eth.start()?;
 ```
+
+Alternatively, to avoid using ESP-IDF, check out
+[ph-esp32-mac driver](https://github.com/photon-circus/ph-esp32-mac)
+which provides a bare-metal (`no_std`, `no_alloc`) Rust driver for the
+ESP32 Ethernet MAC and LAN8720A PHY used in the WT32-ETH01.
 
 ### Using ESPHome with Ethernet
 
