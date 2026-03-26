@@ -246,7 +246,7 @@ ESP32 Ethernet MAC and LAN8720A PHY used in the WT32-ETH01.
 
 ### Using ESPHome with Ethernet
 
-_(Thanks [mati294](https://github.com/egnor/wt32-eth01/issues/12)!)_
+_(Thanks [mati294](https://github.com/egnor/wt32-eth01/issues/12) and [randompersona1](https://github.com/egnor/wt32-eth01/pull/27)!)_
 
 If you're using [ESPHome firmware](https://esphome.io/), you'll want to add this to the [device configuration](https://esphome.io/components/ethernet.html):
 
