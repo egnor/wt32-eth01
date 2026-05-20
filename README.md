@@ -10,7 +10,7 @@ There aren't a ton of ESP32 boards with Ethernet, and the WT32-ETH01 is by far t
 
 It's marketed as a "serial port to Ethernet module" and comes loaded with firmware that lets you send [various "AT" commands](WT32-ETH01-commands-v1.1-en.pdf) over 3.3V serial to set up networking, open connections and exchange data. For most of us, it's more interesting to just flash our own programs on the unit and use standard ESP32 networking libraries.
 
-Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much. Also see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
+Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much, but they do describe [Board Features](https://wiki.wireless-tag.com/docs/en/WT32-ETH01/board_features.html) and [Board Resources](https://wiki.wireless-tag.com/docs/en/WT32-ETH01/board_resources.html). Also see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-)
 
 ## Pins (and gotchas!)
 
@@ -281,9 +281,8 @@ as documented.
 
 There are multiple revisions of the device -- I've seen "V1.2" and "V1.4" on the silkscreen, and the trace routing does differ -- but the differences are unknown. You can get it with or without pin headers pre-soldered on.
 
-Finally, there's a [schematic floating around](WT32_ETH01_V2.schematic.pdf). Its provenance and accuracy are unknown, but it's been helpful to me.
+Finally, WT hosts a [page of resources](https://wiki.wireless-tag.com/docs/en/WT32-ETH01/board_resources.html) including a [schematic](WT32_ETH01_V1.4.schematic.pdf) which has been helpful to me.
 
 ## TODO
 
 - Post KiCad files for ~footprints~, breakout boards, and programming connectors
-- Discussion of issues reported elsewhere?
