@@ -44,7 +44,9 @@ The **ETH01-EVO** uses a different 2×15 header layout. Only eight ESP32-C3 GPIO
 
 The rest of this document describes the original **WT32-ETH01** except where noted. If you have hands-on experience with the ETH02 or EVO, please [file an issue](https://github.com/egnor/wt32-eth01/issues) — I'd love to fold in real-world notes.
 
-## Pins (and gotchas!) for ETH01/ETH02 (not EVO)
+## Pins (and gotchas!)
+
+Pinout for the WT32-ETH01/02 (not EVO!)
 
 <table>
   <tr> <td></td>
