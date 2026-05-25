@@ -1,4 +1,4 @@
-# Unofficial guide to the [WT32-ETH01](http://en.wireless-tag.com/product-item-2.html) (and ESP32-ETH02, WT32-ETH02, etc)
+# Unofficial guide to the [WT32-ETH01](http://en.wireless-tag.com/product-item-2.html) (and WT32-ETH02, WT32-ETH01-EVO, and assorted clones)
 
 <img alt="WT32-ETH01 circuit board" src="wt32-eth01.png" width=200>
 
@@ -16,15 +16,26 @@ Also, see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32
 
 ## Product variants
 
-The [WT32-ETH01](https://en.wireless-tag.com/product-item-2.html) is the original product.
+WT sells several boards under similar names, and it took some digging (thanks [owenthewizard](https://github.com/egnor/wt32-eth01/issues/30) for prompting the investigation!) to untangle what is actually what. Here is the best information I have, gleaned from the official datasheets:
 
-The [WT32-ETH02 PLUS](https://en.wireless-tag.com/article-item-86.html), aka(?) [WT32-ETH01-EVO](https://en.wireless-tag.com/product-item-59.html), aka(?) ESP32-ETH02, appears to be a successor with some improvements:
+| | [WT32-ETH01](https://en.wireless-tag.com/product-item-2.html) (original) | [WT32-ETH02](https://en.wireless-tag.com/article-item-86.html) / **-PLUS** | [WT32-ETH01-EVO](https://en.wireless-tag.com/product-item-59.html) |
+|---|---|---|---|
+| SoC module | [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html), [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) — **dual-core Xtensa** | [ESP32-SOLO-1](https://www.espressif.com/sites/default/files/documentation/esp32-solo-1_datasheet_en.pdf) ([ESP32-S0WD](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf)) — **single-core Xtensa** | WT32C3-S5, [ESP32-C3](https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf) — **single-core RISC-V** |
+| Max clock | 240 MHz | 160 MHz | 160 MHz |
+| Flash | 4 MB | 16 MB (128 Mbit per datasheet) | 4 MB (typical for the ESP32-C3 module) |
+| WiFi / BT | 2.4 GHz WiFi + Bluetooth classic+LE | 2.4 GHz WiFi + Bluetooth classic+LE | 2.4 GHz WiFi + Bluetooth LE only |
+| Ethernet | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) PHY via [RMII](https://en.wikipedia.org/wiki/Media-independent_interface#RMII), using ESP32's built-in MAC | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) PHY via RMII (same as ETH01) | [DM9051NP](https://www.davicom.com.tw/en/product-categories/Industrial-Networking) MAC+PHY via SPI (the ESP32-C3 has no built-in EMAC) |
+| Power | 3.3V _or_ 5V (no PoE) | 3.3V _or_ 5V; the **-PLUS** variant adds an [IEEE 802.3af](https://en.wikipedia.org/wiki/Power_over_Ethernet) PoE module on the bottom | 3.3V _or_ 5V; reserved PoE pads, needs external step-down for full PoE |
+| Pinout | original 2×10 layout (see [Pins](#pins-and-gotchas) below) | same labels/GPIOs as ETH01 (IO0, IO5, IO17, IO12, etc.) — pin-compatible | **different** 2×15 layout with IO_0/01/04/05/09/18/19, CFG, 485_EN |
+| Datasheet | [V1.4 PDF](WT32-ETH01-datasheet-v1.4-en.pdf) | [V1.0 PDF](https://img03.71360.com/w3/77q677/20240424/c98fb14bae07b6d5f684b88a6fd0c434.pdf?dl=1&dlf=WT32-ETH02+Datasheet+V1.0+en.pdf) | [V2.0 PDF](https://img03.71360.com/w3/77q677/20241213/d9204c4fa85036d762668a3a59995d0e.pdf?dl=1&dlf=WT32-ETH01+EVO+Datasheet+V2.0EN.pdf) |
 
-- 32MB flash (!?)
-- true 5-48V power input
-- true PoE with IEEE 802.3af support
+A few things to flag:
 
-The ETH02/EVO/PLUS variant is often sold with a USB-serial interface board designed to plug into top headers and provide easy programming. If you have worked with either of these please write in with what you know! The rest of this document describes the original WT32-ETH01 except where noted.
+- **WT32-ETH02 vs WT32-ETH02-PLUS**: as best I can tell, the PLUS is the same board with an add-on PoE module soldered to pads underneath. Often sold as a kit with an "ETH Adapter Board" for USB programming (see [Programming](#programming-with-the-eth-adapter-board) below).
+- **WT32-ETH01-EVO is a different beast**: despite the name, it's _not_ a drop-in upgrade. Different SoC family (RISC-V instead of Xtensa), different Ethernet chip (SPI instead of RMII), and a different pinout — so neither the software setup nor a carrier-board design will transfer.
+- **"ESP32-ETH02"** (with "ESP" instead of "WT") boards are widely sold on AliExpress and Amazon. Per [a tip from owenthewizard](https://github.com/egnor/wt32-eth01/issues/30#issuecomment-4534027646), these are counterfeits/clones of the WT32-ETH02 and reportedly less reliable. Caveat emptor.
+
+The rest of this document describes the original **WT32-ETH01** except where noted. If you have hands-on experience with the ETH02 or EVO, please [file an issue](https://github.com/egnor/wt32-eth01/issues) — I'd love to fold in real-world notes.
 
 ## Pins (and gotchas!)
 
@@ -108,7 +119,9 @@ Astute readers will have noticed this part has no USB port, so you need an adapt
 
 ### Programming with the "ETH Adapter board"
 
-The newer "PLUS"/"EVO"/"ETH02" version of the board is often sold with an "ETH Adapter Board" with a USB port and female headers designed to mate with the top headers on the board, plus RST and BOOT buttons. I have not used one, but based on pictures it seems to have a CH340C USB-serial bridge and the usual dual-transistor bootloading circuit, so it should work nicely.
+_(Thanks [owenthewizard](https://github.com/egnor/wt32-eth01/issues/30)!)_
+
+The WT32-ETH02 and WT32-ETH01-EVO are often bundled with an "ETH Adapter Board" (visible in [AliExpress](https://a.aliexpress.com/_mNpYgVv) [listings](https://a.aliexpress.com/_mL1uu6T) [like](https://a.aliexpress.com/_mNecLZV) these) — a small PCB with a USB-C port plus RST and BOOT buttons, with female headers that mate with the top headers on a pre-soldered ETH02/EVO board. I have not used one, but based on pictures it has a CH340C USB-serial bridge and the usual dual-transistor bootloading circuit, so it should work nicely. (No public schematic that I've been able to find; if you have one, please share!)
 
 ### Programming with a downloader gizmo
 
@@ -294,7 +307,7 @@ as documented.
 <img alt="WT32-ESP01 system block diagram" src="https://user-images.githubusercontent.com/279819/211134688-df67c565-bd14-44cd-bdfb-e28279180e42.png" width=600>
 
 - [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) is the Ethernet physical layer controller (PHY)
-- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), a (discontinued?) [ESP32-WROOM-32E-N4](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the same [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip, with 4MB (32Mb) of flash (no PSRAM)
+- [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html) is WT's ESP32 module (metal box), an [ESP32-WROOM-32E-N4](https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf) clone based on the [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) chip (dual-core Xtensa, now NRND), with 4MB (32Mb) of flash and no PSRAM
 - "Left Interface" and "Right Interface" are just the two pin headers
 - "烧录接口" means "programming interface" (the six topmost pins)
 
