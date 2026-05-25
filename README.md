@@ -44,7 +44,7 @@ The **ETH01-EVO** uses a different 2×15 header layout. Only eight ESP32-C3 GPIO
 
 The rest of this document describes the original **WT32-ETH01** except where noted. If you have hands-on experience with the ETH02 or EVO, please [file an issue](https://github.com/egnor/wt32-eth01/issues) — I'd love to fold in real-world notes.
 
-## Pins (and gotchas!)
+## Pins (and gotchas!) for ETH01/ETH02 (not EVO)
 
 <table>
   <tr> <td></td>
@@ -53,17 +53,17 @@ The rest of this document describes the original **WT32-ETH01** except where not
     <td>⭕ IO1 (reserved)</td> <td>💬 TXD</td>
   </tr>
   <tr> <td></td> <td align="right">GND ⏚</td> <td>⭕ IO3 (reserved)</td> <td>🗨️ RXD</td> </tr>
-  <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⭕ IO0 (reserved)</td> <td>⏱️ REFCLK and 💻 BOOT</td> </tr>
-  <tr> <td align="right">pull low to reset</td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
-  <tr> <td align="right">ADC1 CH4 📈</td> <td align="right">IO32 ↔️</td> <td>⬅️ IO39 (in only, no pull)</td> <td>📈 ADC1 CH3</td> </tr>
-  <tr> <td align="right">ADC1 CH5 📈</td> <td align="right">IO33 ↔️</td> <td>⬅️ IO36 (in only, no pull)</td> <td>📈 ADC1 CH0</td> </tr>
+  <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⭕ IO0 (reserved)</td> <td>⏱️ REFCLK / 💻 BOOT</td> </tr>
+  <tr> <td align="right">low to reset</td> <td align="right">EN ⏻</td> <td>⏚ GND</td> <td></td> </tr>
+  <tr> <td align="right">ADC1 CH4 📈</td> <td align="right">IO32 ↔️</td> <td>⬅️ IO39 (in only)</td> <td>📈 ADC1 CH3</td> </tr>
+  <tr> <td align="right">ADC1 CH5 📈</td> <td align="right">IO33 ↔️</td> <td>⬅️ IO36 (in only)</td> <td>📈 ADC1 CH0</td> </tr>
   <tr> <td></td> <td align="right">IO5 ↔️</td> <td>↔️ IO15</td> <td>📉 ADC2 CH3</td> </tr>
   <tr> <td></td> <td align="right">IO17 ↔️</td> <td>↔️ IO14</td> <td>📉 ADC2 CH6</td> </tr>
-  <tr> <td></td> <td align="right">GND ⏚</td> <td>▶️ IO12</td> <td>⚠️ must float at boot</td> </tr>
+  <tr> <td></td> <td align="right">GND ⏚</td> <td>▶️ IO12</td> <td>⚠️ float at boot</td> </tr>
   <tr> <td></td> <td align="right">3.3V ⚡</td> <td>⬅️ IO35 (in only, no pull)</td> <td>📈 ADC1 CH7</td> </tr>
   <tr> <td></td> <td align="right">GND ⏚</td> <td>↔️ IO4</td> <td>📉 ADC2 CH0</td> </tr>
-  <tr> <td></td> <td align="right">5V ⚡</td> <td>▶️ IO2</td> <td>⚠️ must float to program</td> </tr>
-  <tr> <td align="right">ethernet link light</td> <td align="right">LINK 🖧</td> <td>⏚ GND</td> <td></td> </tr>
+  <tr> <td></td> <td align="right">5V ⚡</td> <td>▶️ IO2</td> <td>⚠️ float to program</td> </tr>
+  <tr> <td align="right">eth status</td> <td align="right">LINK 🖧</td> <td>⏚ GND</td> <td></td> </tr>
 </table>
 
 **LEGEND**<br>
@@ -112,7 +112,7 @@ You may supply 3.3V power on the `3V3` pins, or 5V power on the `5V` pins, but n
 
 The schematic lists an "LM1117F-1.8V" voltage regulator, which is clearly wrong-- the output is 3.3V, not 1.8V, and also the actual part on the board is marked "AMS1117-3.3". If this were a [true AMS1117](http://www.advanced-monolithic.com/pdf/ds1117.pdf) it would have a max input of 15V and thermal protection, but it doesn't actually seem to have either; with 12V input, many WT32-ETH01 parts will generate smoke. Probably it's a [low-spec AMS1117 knock-off](https://goughlui.com/2021/03/27/note-linear-regulator-woes-when-is-an-ams1117-not-an-ams1117/) of some kind. So, I'd limit its input to 6V or so, or use your own 3.3V source if you need to.
 
-The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an external "splitter" if you want that.
+The WT32-ETH01 does not support Power over Ethernet (PoE), you'll need an external "splitter" if you want that, or use the WT32-ETH02-PLUS.
 
 ### Power-on reset
 
