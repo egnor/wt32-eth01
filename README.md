@@ -268,8 +268,7 @@ let eth_driver = esp_idf_svc::eth::EthDriver::new_rmii(
     pins.gpio19, // txd0
     pins.gpio18, // mdio
     clock,
-    Some(pins.gpio16), // nRST isn't connected per the datasheet, but per the above
-    comment we set it to 16.
+    Some(pins.gpio16), // clock enable (passed as reset as above)
     esp_idf_svc::eth::RmiiEthChipset::LAN87XX,
     Some(1), // phy addr
     sysloop.clone(),
