@@ -1,4 +1,4 @@
-# Unofficial guide to the [WT32-ETH01](http://en.wireless-tag.com/product-item-2.html)
+# Unofficial guide to the [WT32-ETH01](http://en.wireless-tag.com/product-item-2.html) (and ESP32-ETH02, WT32-ETH02, etc)
 
 <img alt="WT32-ETH01 circuit board" src="wt32-eth01.png" width=200>
 
@@ -13,6 +13,18 @@ It's marketed as a "serial port to Ethernet module" and comes loaded with firmwa
 Nobody knows much about [the WT company](http://en.wireless-tag.com/). Don't expect support, and don't lock yourself in too much, but they do describe [Board Features](https://wiki.wireless-tag.com/docs/en/WT32-ETH01/board_features.html) and [Board Resources](https://wiki.wireless-tag.com/docs/en/WT32-ETH01/board_resources.html).
 
 Also, see [Luberth Dijkman's notes on the part](https://github.com/ldijkman/WT32-ETH01-LAN-8720-RJ45-).
+
+## Product variants
+
+The [WT32-ETH01](https://en.wireless-tag.com/product-item-2.html) is the original product.
+
+The [WT32-ETH02 PLUS](https://en.wireless-tag.com/article-item-86.html), aka(?) [WT32-ETH01-EVO](https://en.wireless-tag.com/product-item-59.html), aka(?) ESP32-ETH02, appears to be a successor with some improvements:
+
+- 32MB flash (!?)
+- true 5-48V power input
+- true PoE with IEEE 802.3af support
+
+The ETH02/EVO/PLUS variant is often sold with a USB-serial interface board designed to plug into top headers and provide easy programming. If you have worked with either of these please write in with what you know! The rest of this document describes the original WT32-ETH01 except where noted.
 
 ## Pins (and gotchas!)
 
@@ -48,7 +60,7 @@ Also see [the data sheet/manual](WT32-ETH01-datasheet-v1.4-en.pdf) and [pin refe
 
 Some documents ([like this listing](https://www.amazon.com/dp/B09Z298QJQ)) have pins IO5 and IO35 swapped in comparison to the layout above. All the physical hardware I've seen has the pins laid out as above, but check to make sure!
 
-### Beware!
+### Beware
 
 There are limitations on several of the pins; see "Strapping Pins"
 (section 3.3) in the
@@ -94,9 +106,13 @@ This can be fixed if necessary by adding another capacitor (e.g. 10µF for 100ms
 
 Astute readers will have noticed this part has no USB port, so you need an adapter of some kind. There are several possibilities, listed below; whichever one you use, [PlatformIO's WT32-ETH01 board support](https://docs.platformio.org/en/latest/boards/espressif32/wt32-eth01.html) or the [Arduino IDE ESP32 add-on](https://espressif-docs.readthedocs-hosted.com/projects/arduino-esp32/en/latest/installing.html) (selecting `ESP32 Dev Board` and upload speed of `115200`) should work for programming, or you can use [esptool.py](https://github.com/espressif/esptool) directly if you're hardcore. (I'm not that hardcore.)
 
+### Programming with the "ETH Adapter board"
+
+The newer "PLUS"/"EVO"/"ETH02" version of the board is often sold with an "ETH Adapter Board" with a USB port and female headers designed to mate with the top headers on the board, plus RST and BOOT buttons. I have not used one, but based on pictures it seems to have a CH340C USB-serial bridge and the usual dual-transistor bootloading circuit, so it should work nicely.
+
 ### Programming with a downloader gizmo
 
-The most convenient programming solution is a gizmo like [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (untested, but ought to work). These products include a USB-serial adapter and an automatic bootloading circuit. They have 6 pins (in different orders, sadly) that connect to the 6 "programming" pins at the top (WiFi antenna end) of the WT32-ETH01, at which point programming should work. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
+One convenient programming solution is a gizmo like [M5Stack's ESP32 Downloader](https://shop.m5stack.com/products/esp32-downloader-kit) (I use this) or [wESP32-Prog](https://wesp32.com/wesp32-prog/) (untested, but ought to work). These products include a USB-serial adapter and an automatic bootloading circuit. They have 6 pins (in different orders, sadly) that connect to the 6 "programming" pins at the top (WiFi antenna end) of the WT32-ETH01, at which point programming should work. When I design carrier boards for the WT32-ETH01, I route those 6 pins to a 6-pin header laid out for the programmer. If you're working with a raw board, you can use [jumper wires like these](https://www.adafruit.com/product/1950).
 
 When wiring up the gizmo, make sure gizmo RX goes to WT32-ETH01 TX and vice versa. Also mind the power connections; the M5Stack programmer has a 3.3V output, the wESP32-Prog has a 5V output, make sure you use the right power pin if you want the programmer to power the board. (The 5V input isn't actually in the top 6 "programming pins", but it is labeled.)
 
@@ -125,6 +141,7 @@ If you don't have a downloader gizmo or serial adapter, but do have an Arduino U
 ## Using Ethernet
 
 WiFi is internal to the ESP32 and works "out of the box", but wired Ethernet takes a bit of configuration for the WT32-ETH01:
+
 - The interface to the Ethernet PHY uses GPIO 23 for MDC and GPIO 18 for MDIO
 - There's an external oscillator that drives pin 0
 - That oscillator is enabled by setting GPIO 16 high
