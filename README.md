@@ -20,20 +20,19 @@ WT sells several boards under similar names, and it took some digging (thanks [o
 
 | | [WT32-ETH01](https://en.wireless-tag.com/product-item-2.html) (original) | [WT32-ETH02](https://en.wireless-tag.com/article-item-86.html) / **-PLUS** | [WT32-ETH01-EVO](https://en.wireless-tag.com/product-item-59.html) |
 |---|---|---|---|
-| SoC module | [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html), [ESP32-D0WD-V3](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf) — **dual-core Xtensa** | [ESP32-SOLO-1](https://www.espressif.com/sites/default/files/documentation/esp32-solo-1_datasheet_en.pdf) ([ESP32-S0WD](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf)) — **single-core Xtensa** | WT32C3-S5, [ESP32-C3](https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf) — **single-core RISC-V** |
+| Module/SoC | [WT32-S1](https://www.lcsc.com/product-detail/WIFI-Modules_Wireless-tag-WT32-S1_C477832.html)/[ESP32-D0WD](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf)<br>dual-core Xtensa | [ESP32-SOLO-1](https://www.espressif.com/sites/default/files/documentation/esp32-solo-1_datasheet_en.pdf)/[ESP32-S0WD](https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf))<br>single-core Xtensa | [WT32C3-S5](https://en.wireless-tag.com/product-item-18.html)/[ESP32-C3](https://www.espressif.com/sites/default/files/documentation/esp32-c3_datasheet_en.pdf)<br>single-core RISC-V |
 | Max clock | 240 MHz | 160 MHz | 160 MHz |
-| Flash | 4 MB | 16 MB (128 Mbit per datasheet) | 4 MB (typical for the ESP32-C3 module) |
-| WiFi / BT | 2.4 GHz WiFi + Bluetooth classic+LE | 2.4 GHz WiFi + Bluetooth classic+LE | 2.4 GHz WiFi + Bluetooth LE only |
-| Ethernet | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) PHY via [RMII](https://en.wikipedia.org/wiki/Media-independent_interface#RMII), using ESP32's built-in MAC | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) PHY via RMII (same as ETH01) | [DM9051NP](https://www.lcsc.com/product-detail/Ethernet-Controllers_DAVICOM-DM9051NP_C113756.html) MAC+PHY via SPI (the ESP32-C3 has no built-in EMAC) |
-| Power | 3.3V _or_ 5V (no PoE) | 3.3V _or_ 5V; the **-PLUS** variant adds an [IEEE 802.3af](https://en.wikipedia.org/wiki/Power_over_Ethernet) PoE module on the bottom | 3.3V _or_ 5V; reserved PoE pads, needs external step-down for full PoE |
-| Pinout | original 2×13 layout (see [Pins](#pins-and-gotchas) below) | same layout and GPIOs as ETH01 — pin-compatible | **different** 2×15 layout, fewer GPIOs exposed |
+| Flash | 4 MB | 16 MB | 4 MB |
+| WiFi / BT | 2.4 GHz WiFi<br>Bluetooth classic+LE | 2.4 GHz WiFi<br>Bluetooth classic+LE | 2.4 GHz WiFi<br>Bluetooth LE only |
+| Ethernet | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) PHY via [RMII](https://en.wikipedia.org/wiki/Media-independent_interface#RMII), using ESP32's EMAC | [LAN8720A](https://www.microchip.com/en-us/product/LAN8720A) (same as ETH01) | [DM9051NP](https://www.lcsc.com/product-detail/Ethernet-Controllers_DAVICOM-DM9051NP_C113756.html) MAC+PHY via SPI (ESP32-C3 has no EMAC) |
+| Power | 3.3V _or_ 5V (no PoE) | 3.3V _or_ 5V; the **-PLUS** variant adds [IEEE 802.3af PoE](https://en.wikipedia.org/wiki/Power_over_Ethernet) | 3.3V _or_ 5V; reserved PoE pads |
+| Pinout | [original 2x13 layout](#pins-and-gotchas) | same 2x13 layout | **different** 2×15 layout |
 | Datasheet | [V1.4 PDF](WT32-ETH01-datasheet-v1.4-en.pdf) | [V1.0 PDF](https://img03.71360.com/w3/77q677/20240424/c98fb14bae07b6d5f684b88a6fd0c434.pdf?dl=1&dlf=WT32-ETH02+Datasheet+V1.0+en.pdf) | [V2.0 PDF](https://img03.71360.com/w3/77q677/20241213/d9204c4fa85036d762668a3a59995d0e.pdf?dl=1&dlf=WT32-ETH01+EVO+Datasheet+V2.0EN.pdf) |
 
-A few things to flag:
-
-- **DM9051NP vs W5500**: the DM9051NP is _not_ a hardware TCP/IP stack like the [W5500](https://www.wiznet.io/product-item/w5500/). It's a plain SPI-attached Ethernet MAC+PHY (closer in spirit to the [ENC28J60](https://www.microchip.com/en-us/product/ENC28J60)) with 16KB packet RAM and IP/TCP/UDP checksum offload, but no on-chip socket engine. The host CPU still runs the TCP/IP stack (lwIP, in ESP-IDF's case). It's [supported natively by ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/api-reference/network/esp_eth.html) as a SPI Ethernet module.
-- **WT32-ETH02 vs WT32-ETH02-PLUS**: as best I can tell, the PLUS is the same board with an add-on PoE module soldered to pads underneath. Often sold as a kit with an "ETH Adapter Board" for USB programming (see [Programming](#programming-with-the-eth-adapter-board) below).
-- **WT32-ETH01-EVO is a different beast**: despite the name, it's _not_ a drop-in upgrade. Different SoC family (RISC-V instead of Xtensa), different Ethernet chip (SPI instead of RMII), and a different pinout — so neither the software setup nor a carrier-board design will transfer.
+Notes:
+- **WT32-ETH02 vs WT32-ETH02-PLUS**: the -PLUS seems to be the same board with an add-on PoE module.
+- **WT32-ETH01-EVO**: despite the name, it uses a different SoC family (RISC-V instead of Xtensa), different Ethernet chip (SPI instead of RMII), and different pinout from the original WT32-ETH01 and is neither hardware nor software compatible.
+- **DM9051NP**: the DM9051NP in the -EVO is a plain SPI-attached Ethernet MAC+PHY similar in spirit to the [ENC28J60](https://www.microchip.com/en-us/product/ENC28J60), with 16KB packet RAM and IP/TCP/UDP checksum offload, but no on-chip TCP/IP engine. The host CPU runs the TCP/IP stack (eg. lwIP), with [native ESP-IDF support](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/api-reference/network/esp_eth.html).
 - **"ESP32-ETH02"** (with "ESP" instead of "WT") boards are widely sold on AliExpress and Amazon. Per [a tip from owenthewizard](https://github.com/egnor/wt32-eth01/issues/30#issuecomment-4534027646), these are counterfeits/clones of the WT32-ETH02 and reportedly less reliable. Caveat emptor.
 
 ### Pinouts across variants
@@ -104,9 +103,10 @@ There are limitations on several of the pins; see "Strapping Pins"
 
 The WT32-ETH01 board is 60mm x 26mm x 17mm, and weighs 15.4g. _(Thanks [damdo](https://github.com/egnor/wt32-eth01/pull/10)!)_
 
-This repository includes a [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty).  The symbol is arranged by actual physical pin number (rather than grouped by pin type) to make it easier to design circuits with few overlapping traces. I tried to be as descriptive as possible, but ESP32 pins all have many functions so consult other general ESP32 documentation for additional information about the pins. Note that some of the pin labels differ from what is on the board itself; the marks on the board indicate uses for the built-in firmware, which you will almost certainly replace. I made these from sporadic documentation (most of which is linked to in this repo!) but they have been tested in my own projects so I have some confidence. Obviously they are provided with no warranty. Caveat emptor. _(Thanks [dakotawinslow](https://github.com/egnor/wt32-eth01/pull/2) and [mcenno](https://github.com/egnor/wt32-eth01/pull/17)!)_
-
-You can also find 3D models in [STEP](WT32-ETH01.step) and [WRL](WT32-ETH01.wrl) formats. _(Thanks [oliv3r](https://github.com/egnor/wt32-eth01/pull/11)!)_
+Symbol and footprint files:
+- [KiCad symbol](WT32-ETH01.kicad_sym) and [footprint](WT32-ETH01.pretty) _(Thanks [dakotawinslow](https://github.com/egnor/wt32-eth01/pull/2) and [mcenno](https://github.com/egnor/wt32-eth01/pull/17)!)_
+- 3D models in [STEP](WT32-ETH01.step) and [WRL](WT32-ETH01.wrl) formats _(Thanks [oliv3r](https://github.com/egnor/wt32-eth01/pull/11)!)_
+- SnapEDA has [symbol, footprint, and 3D model files](https://www.snapeda.com/parts/WT32-ETH01/wireless-tag/view-part/) _(Thanks [Petroni2022](https://github.com/Petroni2022)!)_
 
 ## Power
 
